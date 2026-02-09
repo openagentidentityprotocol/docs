@@ -16,7 +16,7 @@
           {
             "group": "Getting started",
             "pages": [
-              "index"
+              "home"
             ]
           },
           {
@@ -44,12 +44,7 @@
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-     
-      ]
-    }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
