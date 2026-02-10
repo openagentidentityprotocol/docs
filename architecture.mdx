@@ -8,32 +8,86 @@ The proposed standard creates a framework that allows an AI agent to obtain appr
 
 This and following pages goes into the structure of the agent identifiers and the authorization process performed between the client and server through OAIP.
 
+OAIP leans on existing best practices for IAM - geared towards the agentic AI shift.
+
 ## Design Goals
 
 - **Language Agnostic:** Support agents written in Python, JavaScript, Go, Java, Rust, etc.
-
 - **Zero Trust:** No implicit trust between agents or based on network location
-
 - **Minimal Overhead:** Fast token verification without centralized bottlenecks
-
 - **Compliance Ready:** Generate audit trails that satisfy SOC 2, GDPR, HIPAA, SOX
-
 - **Developer Friendly:** Simple SDK integration, works locally without infrastructure
 
 ## Scope
 
 - **Agent:** An autonomous AI system that makes decisions and performs actions
-
 - **Agent Identity Document (AID):** JSON structure defining an agent's identity
-
 - **Agent Authentication Token (AAT):** Token proving agent identity
-
 - **Registry:** Central directory of registered agents, their permissions, their capabilities, and serves as federation for the agent
-
 - **Token Issuer:** Service that generates and signs the AATs
-
 - **Resource Server:** API or system that agents access
 
 <Info>
   OAIP only serves as the underlying protocol for agent identity governance and authentication. Any AI agent can use or choose not to follow this.
 </Info>
+
+## Network Diagram (Draft)
+
+Below is a basic draft of how the OAIP flow would look like.
+
+Excuse the bad network diagram. We'll get a better modeling tool soon.
+
+```latex
+┌──────────┐
+│   Root Registry │ (OAIP Authority)
+│   Signs Agent   │
+│  Certificates      
+└──────────┘
+         │
+         │ Issues Attestation
+         ▼
+┌──────────┐
+│  Agent Identity │
+│   (Public Key)  │
+└──────────┘
+         │
+         │ Signs Token Requests
+         ▼
+┌──────────┐
+│  Token Issuer   │
+│  Validates ID   │
+│  Issues AAT     │
+└────┬────┘
+         │
+         │ AAT sent in place of previous creds to resource server (or registry?)
+         ▼
+┌──────────┐
+│ Resource Server │
+│ Verifies Token  │
+│ Grants Access   │
+└──────────┘
+         │
+         │ 
+         ▼
+ ───────────┐
+│ Resource Server │
+│ uses creds for  │
+│ tool requested  │
+└──────────┘
+         │
+         │ 
+         ▼
+┌──────────┐
+│ Agent executes  │
+│ action          │
+│                 │
+└──────────┘
+```
+
+- **Root of Trust:** OAIP registry holds issuer private key
+
+- **Agent Key Pair:** Agent generates keys, uses private keys with OAIP registry to generate a token to talk to the resource server. Private key is unique only to the agent. 
+
+- **Token Verification:** Resource servers validate using issuer public key
+
+- **Revocation:** Registry maintains revocation list checked at verification
