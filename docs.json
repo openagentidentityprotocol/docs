@@ -22,7 +22,8 @@
           {
             "group": "About OAIP",
             "pages": [
-              "architecture"
+              "architecture",
+              "workflow"
             ]
           },
           {
