@@ -4,6 +4,36 @@ title: "Architecture"
 
 This document specifies a proposed standard for identity management of artificial intelligence (AI) agents in the internet. OAIP is a language-agnostic protocol for establishing cryptographic identities for AI agents, enabling authentication, authorization, and audit trails across heterogeneous systems.
 
-The proposed standard creates a framework that allows an AI agent to obtain approval to a resource running a model context protocol (MCP) server by requesting an agent identifier token tied to an end user. 
+The proposed standard creates a framework that allows an AI agent to obtain approval to a resource running a model context protocol (MCP) server by requesting an agent identifier token tied to an end user.
 
 This and following pages goes into the structure of the agent identifiers and the authorization process performed between the client and server through OAIP.
+
+## Design Goals
+
+- **Language Agnostic:** Support agents written in Python, JavaScript, Go, Java, Rust, etc.
+
+- **Zero Trust:** No implicit trust between agents or based on network location
+
+- **Minimal Overhead:** Fast token verification without centralized bottlenecks
+
+- **Compliance Ready:** Generate audit trails that satisfy SOC 2, GDPR, HIPAA, SOX
+
+- **Developer Friendly:** Simple SDK integration, works locally without infrastructure
+
+## Scope
+
+- **Agent:** An autonomous AI system that makes decisions and performs actions
+
+- **Agent Identity Document (AID):** JSON structure defining an agent's identity
+
+- **Agent Authentication Token (AAT):** Token proving agent identity
+
+- **Registry:** Central directory of registered agents, their permissions, their capabilities, and serves as federation for the agent
+
+- **Token Issuer:** Service that generates and signs the AATs
+
+- **Resource Server:** API or system that agents access
+
+<Info>
+  OAIP only serves as the underlying protocol for agent identity governance and authentication. Any AI agent can use or choose not to follow this.
+</Info>
