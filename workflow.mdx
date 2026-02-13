@@ -6,6 +6,9 @@ Below is the proposed workflow for OAIP in action.
 
 ## Agent Registration
 
+<img src="/img/oaip_register.png" alt="fig1" />
+Figure 1. Initially Registering Agents
+
 ```
 1. Agent generates cryptographic key pair
 
@@ -14,42 +17,37 @@ Below is the proposed workflow for OAIP in action.
    
    Request Body:
    {
-     "identity": {
-       "name": "customer_support_agent",
-       "type": "autonomous_agent",
-       "created_by": "joe",
-       "organization_id": "acme123"
-     },
-     "provenance": {
-       "framework": "langchain", // do we need?
-       "model": "latest-model",
-       "build_environment": "production",
-	   "code_hash": ABCD,
-     },
-     "capabilities": [
-       "read:customer_tickets",
-       "write:email_responses"
-     ]
-     "public_key": "<key>",
-   }
+    "capabilities": [
+        "read:customer_tickets",
+        "write:email_responses"
+    ],
+    "id": {
+      "deployed_by": "user_1",
+      "group_id": "business_group",
+      "name": "customer_support_agent",
+      "type": "autonomous_agent",
+      "uuid": "<uuid-32>"
+    },
+    "public_key": "<user_1_public_key>",
+    "version": "1.0.0"
+  }
 
 3. Registry validates:
    - Public key format and algorithm
    - Proof of private key possession (signature verification)
    - Organization exists and has capacity
    - Capabilities align with org policies
-   - Code hash is unique (prevents duplicate registrations)
 
 4. Registry → Agent
    Response returns certificate for agent.
    {
-     "agent_id": "1234567",
-     "version": "1.0.0",
-     "status": "registered",
-     "registry_url": "https://registry.viewagents.ai",
-     "attestation_certificate": "-----BEGIN CERTIFICATE-----\nMIIC...",
-     "created_at": "2026-02-09"
-   }
+    "attestation_certificate": "-----BEGIN CERTIFICATE-----\nMIIC...",
+    "created_at": "1997-06-22T06:00:00.000Z",
+    "registry_url": "https://registry.viewagents.ai",
+    "status": "registered",
+    "uuid": identification_body["id"]["uuid"],
+    "version": identification_body["version"],
+  }
 
 5. Agent stores:
    - agent_id
@@ -65,8 +63,6 @@ Below is the proposed workflow for OAIP in action.
 
 2. Agent → Token Issuer
    POST /v1/auth/token
-  
-   
    Request Body:
    {
      "agent_id": "abc123",
@@ -114,7 +110,7 @@ Below is the proposed workflow for OAIP in action.
 
 2. Resource Server → Token Issuer
    POST /v1/auth/verify
-   
+
    Request Body:
    {
      "token": "abc....",
